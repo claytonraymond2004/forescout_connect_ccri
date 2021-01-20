@@ -3,6 +3,8 @@
 # by CounterACT and will be in the 'params' dictionary for any property with that dependency. 
 nessus_scan_results = params["nessus_scan_results"]
 
+logging.debug(nessus_scan_results)
+
 # All responses from scripts must contain the JSON object 'response'. Host property resolve scripts will need to populate a
 # 'properties' JSON object within the JSON object 'response'. The 'properties' object will be a key, value mapping between the
 # CounterACT property name and the value of the property.
@@ -17,13 +19,21 @@ properties = {
 if not nessus_scan_results:
     response["properties"] = None
 else: 
-    # Iterate through each nessus scan result and increment count
-    for vuln in nessus_scan_results:
+    # Function to evaluate a vuln if it is cat 1/2/3 and count
+    def eval_vuln(vuln):
         if (vuln['value']['plugin_severity'] == "severity_High") or (vuln['value']['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['value']['Xref']) or ("IAVB" in vuln['value']['Xref']) or ("IAVM" in vuln['value']['Xref']):
             properties.connect_ccri_acas_cat1 += 1
         elif vuln['value']['plugin_severity'] == "severity_Medium":
             properties.connect_ccri_acas_cat2 += 1
         elif vuln['value']['plugin_severity'] == "severity_Low":
             properties.connect_ccri_acas_cat3 += 1
+
+    # Depending on if given list of vulns or a single vuln, process accordingly
+    if isinstance(nessus_scan_results, dict):
+        eval_vuln(nessus_scan_results)
+    elif isinstance(nessus_scan_results, list):
+        for vuln in nessus_scan_results:
+            eval_vuln(vuln)
+            
     # Return to resolver to create property in Forescout
     response["properties"] = properties
