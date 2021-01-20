@@ -10,7 +10,7 @@ response = {}
 properties = {
     "connect_ccri_acas_cat1": 0,
     "connect_ccri_acas_cat2": 0,
-    "connect_ccri_acas_cat1": 0
+    "connect_ccri_acas_cat3": 0
 }
 
 # Didn't get vuln data, return nothing, Irresolvable
@@ -19,11 +19,11 @@ if not nessus_scan_results:
 else: 
     # Iterate through each nessus scan result and increment count
     for vuln in nessus_scan_results:
-        if (vuln.value.plugin_severity == "severity_High") or (vuln.value.plugin_severity == 'severity_Critical') or ("IAVA" in vuln.value.Xref) or ("IAVB" in vuln.value.Xref) or ("IAVM" in vuln.value.Xref)
+        if (vuln['value']['plugin_severity'] == "severity_High") or (vuln['value']['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['value']['Xref']) or ("IAVB" in vuln['value']['Xref']) or ("IAVM" in vuln['value']['Xref']):
             properties.connect_ccri_acas_cat1 += 1
-        else if vuln.value.plugin_severity == "severity_Medium":
+        elif vuln['value']['plugin_severity'] == "severity_Medium":
             properties.connect_ccri_acas_cat2 += 1
-        else if vuln.value.plugin_severity == "severity_Low":
+        elif vuln['value']['plugin_severity'] == "severity_Low":
             properties.connect_ccri_acas_cat3 += 1
     # Return to resolver to create property in Forescout
     response["properties"] = properties
