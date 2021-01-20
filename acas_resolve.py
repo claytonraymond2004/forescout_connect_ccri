@@ -24,16 +24,17 @@ def eval_vuln(vuln):
     elif vuln['plugin_severity'] == "severity_Low":
         properties.connect_ccri_acas_cat3 += 1
 
-# Didn't get vuln data, return nothing, Irresolvable
-if not nessus_scan_results:
-    response["properties"] = None
-else: 
-    # Depending on if given list of vulns or a single vuln, process accordingly
-    if isinstance(nessus_scan_results, dict):
-        eval_vuln(nessus_scan_results)
-    elif isinstance(nessus_scan_results, list):
-        for vuln in nessus_scan_results:
-            eval_vuln(vuln)
-            
-    # Return to resolver to create property in Forescout
-    response["properties"] = properties
+# Depending on if given list of vulns or a single vuln, process accordingly
+if isinstance(nessus_scan_results, dict):
+    logging.debug("nessus_scan_results is a single item")
+    eval_vuln(nessus_scan_results)
+elif isinstance(nessus_scan_results, list):
+    logging.debug("nessus_scan_results is a list of results")
+    for vuln in nessus_scan_results:
+        eval_vuln(vuln)
+else:
+    logging.debug("nessus_scan_results is not defined")
+    properties = None
+
+# Return to resolver to create property in Forescout
+response["properties"] = properties
