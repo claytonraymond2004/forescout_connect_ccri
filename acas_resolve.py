@@ -21,11 +21,11 @@ if not nessus_scan_results:
 else: 
     # Function to evaluate a vuln if it is cat 1/2/3 and count
     def eval_vuln(vuln):
-        if (vuln['value']['plugin_severity'] == "severity_High") or (vuln['value']['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['value']['Xref']) or ("IAVB" in vuln['value']['Xref']) or ("IAVM" in vuln['value']['Xref']):
+        if (vuln['plugin_severity'] == "severity_High") or (vuln['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['Xref']) or ("IAVB" in vuln['Xref']) or ("IAVM" in vuln['Xref']):
             properties.connect_ccri_acas_cat1 += 1
-        elif vuln['value']['plugin_severity'] == "severity_Medium":
+        elif vuln['plugin_severity'] == "severity_Medium":
             properties.connect_ccri_acas_cat2 += 1
-        elif vuln['value']['plugin_severity'] == "severity_Low":
+        elif vuln['plugin_severity'] == "severity_Low":
             properties.connect_ccri_acas_cat3 += 1
 
     # Depending on if given list of vulns or a single vuln, process accordingly
