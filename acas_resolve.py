@@ -1,7 +1,9 @@
+import json
+
 # To obtain the ACAS scan data that is needed to make calculations, add the 'nessus_scan_results' CounterACT host property
 # as a dependency to each property on 'property.conf'. Any property added as a dependency will be resolved (or attempted to be resolved)
 # by CounterACT and will be in the 'params' dictionary for any property with that dependency. 
-nessus_scan_results = params["nessus_scan_results"]
+nessus_scan_results = json.loads(params["nessus_scan_results"])
 
 # All responses from scripts must contain the JSON object 'response'. Host property resolve scripts will need to populate a
 # 'properties' JSON object within the JSON object 'response'. The 'properties' object will be a key, value mapping between the
