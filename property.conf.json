@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "name": "CCRI",
+  "groups": [
+    {
+      "name":"connect_ccri_acas",
+      "label":"ACAS"
+    }
+  ],
+  "properties": [
+    {
+      "tag": "connect_ccri_acas_cat1",
+      "label": "ACAS CAT 1 Count",
+      "description": "Number of CAT 1 Vulnerabilities from ACAS",
+      "type": "integer",
+      "group": "connect_ccri_acas",
+      "dependencies": [
+        {
+          "name": "nessus_scan_results"
+        }
+      ]
+    },
+    {
+      "tag": "connect_ccri_acas_cat2",
+      "label": "ACAS CAT 2 Count",
+      "description": "Number of CAT 2 Vulnerabilities from ACAS",
+      "type": "integer",
+      "group": "connect_ccri_acas",
+      "dependencies": [
+        {
+          "name": "nessus_scan_results"
+        }
+      ]
+    },
+    {
+      "tag": "connect_ccri_acas_cat3",
+      "label": "ACAS CAT 3 Count",
+      "description": "Number of CAT 3 Vulnerabilities from ACAS",
+      "type": "integer",
+      "group": "connect_ccri_acas",
+      "dependencies": [
+        {
+          "name": "nessus_scan_results"
+        }
+      ]
+    }
+  ],
+  "scripts": [
+    {
+      "name": "acas_resolve.py",
+      "properties": [
+        "connect_ccri_acas_cat1",
+        "connect_ccri_acas_cat2",
+        "connect_ccri_acas_cat3"
+      ]
+    }
+  ]
+}
