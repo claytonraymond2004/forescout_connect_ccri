@@ -16,7 +16,7 @@ properties = {
 # Didn't get vuln data, return nothing, Irresolvable
 if not nessus_scan_results:
     response["properties"] = None
-else
+else: 
     # Iterate through each nessus scan result and increment count
     for vuln in nessus_scan_results:
         if (vuln.value.plugin_severity == "severity_High") or (vuln.value.plugin_severity == 'severity_Critical') or ("IAVA" in vuln.value.Xref) or ("IAVB" in vuln.value.Xref) or ("IAVM" in vuln.value.Xref)
