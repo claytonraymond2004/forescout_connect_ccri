@@ -1,43 +1,57 @@
 import json
+import urllib
 
-# To obtain the ACAS scan data that is needed to make calculations, add the 'nessus_scan_results' CounterACT host property
-# as a dependency to each property on 'property.conf'. Any property added as a dependency will be resolved (or attempted to be resolved)
-# by CounterACT and will be in the 'params' dictionary for any property with that dependency. 
-nessus_scan_results = json.loads(params["nessus_scan_results"])
-logging.debug(nessus_scan_results)
-
-# All responses from scripts must contain the JSON object 'response'. Host property resolve scripts will need to populate a
-# 'properties' JSON object within the JSON object 'response'. The 'properties' object will be a key, value mapping between the
-# CounterACT property name and the value of the property.
+# Hold response to Forescout EyeExtend Connect
 response = {}
-properties = {
-    "connect_ccri_acas_cat1": 0,
-    "connect_ccri_acas_cat2": 0,
-    "connect_ccri_acas_cat3": 0
-}
 
-# Function to evaluate a vuln if it is cat 1/2/3 and count
-def eval_vuln(vuln):
-    logging.debug("Evaluating vulnerability")
-    logging.debug(vuln)
-    if (vuln['plugin_severity'] == "severity_High") or (vuln['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['Xref']) or ("IAVB" in vuln['Xref']) or ("IAVM" in vuln['Xref']):
-        properties.connect_ccri_acas_cat1 += 1
-    elif vuln['plugin_severity'] == "severity_Medium":
-        properties.connect_ccri_acas_cat2 += 1
-    elif vuln['plugin_severity'] == "severity_Low":
-        properties.connect_ccri_acas_cat3 += 1
+# Get parameter details from resolve script parameters -- what host are we resolving?
+host_ip = params["ip"] # Host IP address
 
-# Depending on if given list of vulns or a single vuln, process accordingly
-if isinstance(nessus_scan_results, dict):
-    logging.debug("nessus_scan_results is a single item")
-    eval_vuln(nessus_scan_results)
-elif isinstance(nessus_scan_results, list):
-    logging.debug("nessus_scan_results is a list of results")
-    for vuln in nessus_scan_results:
-        eval_vuln(vuln)
-else:
-    logging.debug("nessus_scan_results is not defined")
-    properties = None
+# Get Forescout OIM Web API Details (We connect to OIM to get data) from Connect App context
+forescout_url = params["connect_ccri_forescout_url"]
+forescout_jwt_token = params["connect_authorization_token"]
 
-# Return to resolver to create property in Forescout
-response["properties"] = properties
+# Create request to get host data from Forescout
+forescout_headers = {"Authorization": forescout_jwt_token}
+forescout_request = urllib.request.Request(forescout_url + "/api/hosts/ip/" + host_ip + "/?fields=nessus_scan_results", headers=forescout_headers)
+
+logging.debug("Preparing to get host information for host:{}".format(host_ip))
+
+try:
+    # Make API request to Forescout Web API For host
+    forescout_resp = urllib.request.urlopen(forescout_request, context=ssl_context) # To use the server validation feature, use the keyword 'ssl_context' in the http reqeust
+    if forescout_resp.getcode() == 200:
+        logging.debug("Received data from Forescout Web API")
+        # Load response data
+        host_data = json.loads(forescout_resp.read().decode('utf-8'))
+
+        # Check if response contains scan data
+        nessus_scan_results = host_data['host']['fields']['nessus_scan_results']
+
+        if nessus_scan_results:
+            properties = {
+                "connect_ccri_acas_cat1": 0,
+                "connect_ccri_acas_cat2": 0,
+                "connect_ccri_acas_cat3": 0
+            }
+
+            # Iterate through vulnerability list
+            for vuln in nessus_scan_results:
+                logging.debug("Evaluating vulnerability")
+                logging.debug(vuln)
+                if (vuln['plugin_severity'] == "severity_High") or (vuln['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['Xref']) or ("IAVB" in vuln['Xref']) or ("IAVM" in vuln['Xref']):
+                    properties.connect_ccri_acas_cat1 += 1
+                elif vuln['plugin_severity'] == "severity_Medium":
+                    properties.connect_ccri_acas_cat2 += 1
+                elif vuln['plugin_severity'] == "severity_Low":
+                    properties.connect_ccri_acas_cat3 += 1
+
+            # Return resolved properties to Connect
+            response["properties"] = properties
+    else:
+       logging.error("Failed API Request to Forescout to get host data!")
+       response["error"] = "Failed API request to Forescout Web API server!"
+
+except Exception as e:
+    logging.error("General Block Exception: {}".format(e))
+    response["error"] = "Exception! Something went wrong! Couldn't talk to Forescout, action parsing failed, or something else failed. See the debug logs for more info."
