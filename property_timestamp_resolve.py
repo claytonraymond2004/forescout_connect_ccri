@@ -25,15 +25,20 @@ try:
         # Load response data
         host_data = json.loads(forescout_resp.read().decode('utf-8'))
 
-        online = host_data['host']['fields']['online']
+        online = host_data.get('host', {}).get('fields', {}).get('online', None)
 
         if online:
             properties = {
-                "connect_ccri_timestamp_online": online['timestamp']
+                "connect_ccri_timestamp_online": online.get('timestamp', None)
             }
 
             # Return resolved properties to Connect
             response["properties"] = properties
+
+        else:
+            logging.error("No Online timestamp data for host found! (online is not found in Forescout Web API)")
+            response["error"] = "No Online timestamp data for host found! (online is not found in Forescout Web API)"
+
     else:
        logging.error("Failed API Request to Forescout to get host data!")
        response["error"] = "Failed API request to Forescout Web API server!"

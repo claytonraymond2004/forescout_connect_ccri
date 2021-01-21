@@ -26,7 +26,7 @@ try:
         host_data = json.loads(forescout_resp.read().decode('utf-8'))
 
         # Check if response contains scan data
-        nessus_scan_results = host_data['host']['fields']['nessus_scan_results']
+        nessus_scan_results = host_data.get('host', {}).get('fields', {}).get('nessus_scan_results', None)
 
         if nessus_scan_results:
             properties = {
@@ -39,26 +39,34 @@ try:
             for vuln in nessus_scan_results:
                 logging.debug("Evaluating vulnerability: {}".format(vuln))
 
+                severity = vuln.get('value', {}).get('plugin_severity', {})
+                xref = vuln.get('value', {}).get('Xref', {})
+
                 # CAT 1
-                if (vuln['value']['plugin_severity'] == "severity_High") or (vuln['value']['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['value']['Xref']) or ("IAVB" in vuln['value']['Xref']) or ("IAVM" in vuln['value']['Xref']):
+                if (severity == "severity_High") or (severity == 'severity_Critical') or ("IAVA" in xref) or ("IAVB" in xref) or ("IAVM" in xref):
                     properties['connect_ccri_acas_cat1'] += 1
                     logging.debug("CAT 1 Vulnerability!")
 
                 # CAT 2
-                elif vuln['value']['plugin_severity'] == "severity_Medium":
+                elif severity == "severity_Medium":
                     properties['connect_ccri_acas_cat2'] += 1
                     logging.debug("CAT 2 Vulnerability!")
 
                 # CAT 3
-                elif vuln['value']['plugin_severity'] == "severity_Low":
+                elif severity == "severity_Low":
                     logging.debug("CAT 3 Vulnerability!")
                     properties['connect_ccri_acas_cat3'] += 1
                 
                 else:
-                    logging.debug("NO CAT Vulnerability!")
+                    logging.debug("Not a CAT Vulnerability!")
 
             # Return resolved properties to Connect
             response["properties"] = properties
+
+        else:
+            logging.error("No Tenable Scan data for host found! (nessus_scan_results is not found in Forescout Web API)")
+            response["error"] = "No Tenable Scan data for host found! (nessus_scan_results is empty in Forescout Web API)"
+            
     else:
        logging.error("Failed API Request to Forescout to get host data!")
        response["error"] = "Failed API request to Forescout Web API server!"
