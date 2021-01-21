@@ -15,7 +15,7 @@ forescout_jwt_token = params["connect_authorization_token"]
 forescout_headers = {"Authorization": forescout_jwt_token}
 forescout_request = urllib.request.Request(forescout_url + "/api/hosts/ip/" + host_ip + "/?fields=nessus_scan_results", headers=forescout_headers)
 
-logging.debug("Preparing to get host information for host:{}".format(host_ip))
+logging.debug("Preparing to get host information for host: {}".format(host_ip))
 
 try:
     # Make API request to Forescout Web API For host
@@ -37,13 +37,12 @@ try:
 
             # Iterate through vulnerability list
             for vuln in nessus_scan_results:
-                logging.debug("Evaluating vulnerability")
-                logging.debug(vuln)
-                if (vuln['plugin_severity'] == "severity_High") or (vuln['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['Xref']) or ("IAVB" in vuln['Xref']) or ("IAVM" in vuln['Xref']):
+                logging.debug("Evaluating vulnerability: {}".format(vuln))
+                if (vuln['value']['plugin_severity'] == "severity_High") or (vuln['value']['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['value']['Xref']) or ("IAVB" in vuln['value']['Xref']) or ("IAVM" in vuln['value']['Xref']):
                     properties.connect_ccri_acas_cat1 += 1
-                elif vuln['plugin_severity'] == "severity_Medium":
+                elif vuln['value']['plugin_severity'] == "severity_Medium":
                     properties.connect_ccri_acas_cat2 += 1
-                elif vuln['plugin_severity'] == "severity_Low":
+                elif vuln['value']['plugin_severity'] == "severity_Low":
                     properties.connect_ccri_acas_cat3 += 1
 
             # Return resolved properties to Connect
