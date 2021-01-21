@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<RULES>
+    <RULE APP_VERSION="8.2.1-311" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="Relies on Forescout Tenable integration to function (nessus_scan_results). Will automatically update if underlying scan results from integration is updated." ENABLED="true" ID="3953110638726675152" NAME="ACAS CAT 1 Counts" NOT_COND_UPDATE="true" UPGRADE_PERFORMED="true">
+        <GROUP_IN_FILTER/>
+        <INACTIVITY_TTL TTL="259200000" USE_DEFAULT="true"/>
+        <ADMISSION_RESOLVE_DELAY TTL="30000" USE_DEFAULT="true"/>
+        <MATCH_TIMING RATE="86400" SKIP_INACTIVE="true">
+            <ADMISSION ALL="true"/>
+        </MATCH_TIMING>
+        <EXPRESSION EXPR_TYPE="SIMPLE">
+            <!--Rule expression. Rule name is: ACAS CAT 1 Counts-->
+            <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="nessus_scan_results" LABEL="Tenable Scan Results" LEFT_PARENTHESIS="0" LOGIC="AND" PLUGIN_NAME="Data Simulator" PLUGIN_UNIQUE_NAME="random_data" PLUGIN_VESRION="3.0.1" PLUGIN_VESRION_NUMBER="300000058" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                <FILTER COMP_FIELD_NAME="nessus_scan_results" FILTER_ID="1631971732344820236">
+                    <SUB_FILTER CASE_SENSITIVE="false" HAS_VALUE="true" MEETS="true" SUB_FIELD_NAME="policy_name" TYPE="any">
+                        <VALUE VALUE2="Any"/>
+                    </SUB_FILTER>
+                </FILTER>
+            </CONDITION>
+        </EXPRESSION>
+        <EXCEPTION NAME="nbthost" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="ip" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="user" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="mac" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="group" UNKNOWN_EVAL="UNMATCH"/>
+        <ORIGIN NAME="CUSTOM"/>
+        <UNMATCH_TIMING RATE="86400" SKIP_INACTIVE="true">
+            <ADMISSION ALL="true"/>
+        </UNMATCH_TIMING>
+        <SEGMENT ID="5305124740861699347" NAME="Nakatomi - In Scope">
+            <RANGE FROM="10.0.0.1" TO="10.255.255.255"/>
+            <RANGE FROM="74.209.0.0" TO="74.209.255.255"/>
+            <RANGE FROM="137.48.0.0" TO="137.48.255.255"/>
+            <RANGE FROM="172.16.0.0" TO="172.16.99.255"/>
+            <RANGE FROM="172.16.100.1" TO="172.16.100.254"/>
+            <RANGE FROM="172.16.101.1" TO="172.16.101.254"/>
+            <RANGE FROM="172.16.102.0" TO="172.17.255.255"/>
+            <RANGE FROM="172.19.1.1" TO="172.26.11.255"/>
+            <RANGE FROM="172.27.12.0" TO="172.27.17.255"/>
+            <RANGE FROM="172.27.20.0" TO="172.27.23.255"/>
+            <RANGE FROM="172.30.0.0" TO="172.31.255.255"/>
+            <RANGE FROM="192.168.0.0" TO="192.168.255.255"/>
+        </SEGMENT>
+        <RULE_CHAIN>
+            <INNER_RULE APP_VERSION="8.2.1-311" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="-3705309091694766078" NAME="&gt; 10 CAT 1s" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="NOT">
+                    <!--Rule expression. Rule name is: > 10 CAT 1s-->
+                    <EXPRESSION EXPR_TYPE="SIMPLE">
+                        <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_acas_cat1" INNER_NOT="true" LABEL="ACAS CAT 1 Count" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                            <FILTER FILTER_ID="-3673827241436236455">
+                                <RANGE FROM="0" TO="10"/>
+                            </FILTER>
+                        </CONDITION>
+                    </EXPRESSION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.2.1-311" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="8393220009835177196" NAME="1-10 CAT 1s" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: 1-10 CAT 1s-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_acas_cat1" LABEL="ACAS CAT 1 Count" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                        <FILTER FILTER_ID="7125710829791946502">
+                            <RANGE FROM="1" TO="10"/>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.2.1-311" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="496973437483292168" NAME="0 CAT 1s" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: 0 CAT 1s-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_acas_cat1" LABEL="ACAS CAT 1 Count" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                        <FILTER FILTER_ID="-4235755010826109773">
+                            <RANGE FROM="0" TO="0"/>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.2.1-311" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="7225478244664212005" NAME="Irresolvable" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+            </INNER_RULE>
+        </RULE_CHAIN>
+        <REPORT_TABLES/>
+    </RULE>
+</RULES>
