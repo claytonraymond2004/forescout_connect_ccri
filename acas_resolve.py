@@ -39,11 +39,11 @@ try:
             for vuln in nessus_scan_results:
                 logging.debug("Evaluating vulnerability: {}".format(vuln))
                 if (vuln['value']['plugin_severity'] == "severity_High") or (vuln['value']['plugin_severity'] == 'severity_Critical') or ("IAVA" in vuln['value']['Xref']) or ("IAVB" in vuln['value']['Xref']) or ("IAVM" in vuln['value']['Xref']):
-                    properties.connect_ccri_acas_cat1 += 1
+                    properties['connect_ccri_acas_cat1'] += 1
                 elif vuln['value']['plugin_severity'] == "severity_Medium":
-                    properties.connect_ccri_acas_cat2 += 1
+                    properties['connect_ccri_acas_cat2'] += 1
                 elif vuln['value']['plugin_severity'] == "severity_Low":
-                    properties.connect_ccri_acas_cat3 += 1
+                    properties['connect_ccri_acas_cat3'] += 1
 
             # Return resolved properties to Connect
             response["properties"] = properties
