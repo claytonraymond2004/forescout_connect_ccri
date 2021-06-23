@@ -4,6 +4,7 @@
 
 .DESCRIPTION
     Grabs serial number from WMI, authenticates to Forescout Connect Web API, and then updates host data
+    Run with: ccri_post_win_serialnumber.ps1 -ip {ip} -api <connect_api_ip> -username <connect_api_username> -password <connect_api_password>
 
 .PARAMETER ip
     The IP of the host to update in Forescout (the device this is run on)
