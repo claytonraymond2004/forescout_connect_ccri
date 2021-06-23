@@ -1,4 +1,7 @@
 #!/usr/bin/python
+# Script to be run as 'Run Script on CounterACT' Action on a rule filtering to Cisco IP phones running a webpage on :80
+# 	Script expects parameters when run: cisco_phone.py {ip} <connect_api_ip> <connect_api_username> <connect_api_password>
+# Should be paired with the 'ccri' app which creates the Serial Number property on devices
 
 # Imports
 import sys, os
