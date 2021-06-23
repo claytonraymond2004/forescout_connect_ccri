@@ -4,7 +4,6 @@
 
 .DESCRIPTION
     Grabs serial number from WMI, authenticates to Forescout Connect Web API, and then updates host data
-    Run with: ccri_post_win_serialnumber.ps1 -ip {ip} -api <connect_api_ip> -username <connect_api_username> -password <connect_api_password>
 
 .PARAMETER ip
     The IP of the host to update in Forescout (the device this is run on)
@@ -26,9 +25,18 @@ Param(
     [string]$password = $(throw "-password is required.")
 )
 
-# Get system BIOS info
+# Get system BIOS info for computer serial number
 $biosData = Get-WmiObject win32_bios
 Write-Host $biosData["SerialNumber"]
+
+# Get phyiscal media info for hard drive serial numbers
+$physicalMedia = Get-WMIObject win32_physicalmedia
+$mediaSerials = @()
+foreach ($drive in $physicalMedia) {
+    $mediaSerials += "$($drive.Tag):$($drive.SerialNumber)"
+}
+Write-Host $mediaSerials
+
 
 # Get Connect Web API Token
 try {
@@ -42,11 +50,11 @@ try {
     $headers.Add("Content-Type", "application/json")
     $headers.Add("Authorization", "Bearer $($response.data.token)")
     $headers.Add("Accept", "application/json")
-    $body = "{ `"ip`": `"$ip`", `"properties`":{ `"connect_ccri_serialnumber`":`"$($biosData["SerialNumber"])`" }}"
+    $body = "{ `"ip`": `"$ip`", `"properties`":{ `"connect_ccri_serialnumber`":`"$($biosData["SerialNumber"])`", `"connect_ccri_diskserialnumbers`": $(ConvertTo-Json -Compress $mediaSerials) }}"
     $response = Invoke-RestMethod "https://$api/connect/v1/hosts" -Method 'POST' -Headers $headers -Body $body
 
 } catch {
     # Error authenticating
-    Write-Error "Forescout Connect API Auth error - StatusCode:" $_.Exception.Response.StatusCode.value__ 
-    Write-Error "Forescout Connect API Auth error - StatusDescription:" $_.Exception.Response.StatusDescription
+    Write-Host "Forescout Connect API Auth error - StatusCode:" $_.Exception.Response.StatusCode.value__ 
+    Write-Host "Forescout Connect API Auth error - StatusDescription:" $_.Exception.Response.StatusDescription
 }
