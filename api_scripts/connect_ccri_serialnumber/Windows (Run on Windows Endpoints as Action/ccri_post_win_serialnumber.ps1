@@ -47,6 +47,6 @@ try {
 
 } catch {
     # Error authenticating
-    Write-Host "Forescout Connect API Auth error - StatusCode:" $_.Exception.Response.StatusCode.value__ 
-    Write-Host "Forescout Connect API Auth error - StatusDescription:" $_.Exception.Response.StatusDescription
+    Write-Error "Forescout Connect API Auth error - StatusCode:" $_.Exception.Response.StatusCode.value__ 
+    Write-Error "Forescout Connect API Auth error - StatusDescription:" $_.Exception.Response.StatusDescription
 }
