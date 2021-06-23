@@ -33,9 +33,9 @@ Write-Host $biosData["SerialNumber"]
 $physicalMedia = Get-WMIObject win32_physicalmedia
 $mediaSerials = @()
 foreach ($drive in $physicalMedia) {
-    $mediaSerials += "$($drive.Tag):$($drive.SerialNumber)"
+    $mediaSerials += @{Tag = $drive.Tag; serial_number = $drive.SerialNumber}
 }
-Write-Host $mediaSerials
+Write-Host $(ConvertTo-Json -Compress $mediaSerials)
 
 
 # Get Connect Web API Token
