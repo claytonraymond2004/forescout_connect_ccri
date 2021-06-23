@@ -17,10 +17,11 @@ This package is a collection of utilities, policy templates, and scripts to help
 - Creates properties which are updatable via the Connect API
 	- Properties added:
 		- Device Serial Number
+		- Physical Media Serial Numbers
 
-- Scripts & template which will update the "Device Serial Number" property with the Serial Number of the following devices:
-	- Cisco IP Phones via scraping Web Page from Forescout managing appliance in a Python script
-	- Windows devices via running Powershell script on manageable Windows devices
+- Scripts & template which will update the "Device Serial Number" and "Physical Media Serial Numbers" property with the Serial Number of the following devices:
+	- Cisco IP Phones via scraping Web Page from Forescout managing appliance in a Python script ("Device Serial Number" only)
+	- Windows devices via running Powershell script on manageable Windows devices ("Device Serial Number and "Physical Media Serial Numbers")
  
 ## Setup
 
@@ -62,7 +63,7 @@ Policies:
 - Serial Number Populator
 
 ### Serial Number Populator
-This policy template is a bit special and requires some tuning and importing some scripts included in this repo.  This policy utilizes a python script that runs on the Forescout managing appliance to scrape the serial number from Cisco IP Phone's website and POSTs the data to this Connect App's Web API to update the attribute. Similarly, a Powershell script is included which runs on Windows endpoints to get the serial number and POST the data via API.
+This policy template is a bit special and requires some tuning and importing some scripts included in this repo.  This policy utilizes a python script that runs on the Forescout managing appliance to scrape the serial number from Cisco IP Phone's website and POSTs the data to this Connect App's Web API to update the attribute. Similarly, a Powershell script is included which runs on Windows endpoints to get the serial number of the device and physical media and POST the data via API.
 
 When deploying this policy, you will need to upload these scripts to the Forescout Script Repository and adjust some arguments in the policy sub-rules.
 
@@ -100,7 +101,7 @@ Example: `ccri_post_win_serialnumber.ps1 -ip {ip} -api 10.0.1.15 -username demo 
 It is also recommended to adjust the conditions on the sub-rule to make sure it matches to your manageable Windows endpoints properly.
 
 ##### ccri_post_win_serialnumber.ps1 Script details
-This script is fairly basic and just grabs the `SerialNumber` attribute from the powershell `Get-WmiObject win32_bios` call. 
+This script is fairly basic and just grabs the `SerialNumber` attribute from the powershell `Get-WmiObject win32_bios` call and the drive information from the `Get-WMIObject win32_physicalmedia` call.
 
 Please feel free to branch this repo and make a merge request to enhance this if there's something better.
 
