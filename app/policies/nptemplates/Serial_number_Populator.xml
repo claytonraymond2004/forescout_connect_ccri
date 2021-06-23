@@ -66,7 +66,7 @@
                     </EXPRESSION>
                 </EXPRESSION>
                 <ACTION DISABLED="false" NAME="cact_run_script_s">
-                    <PARAM NAME="cact_script_params_act" VALUE="cisco_phone.py {ip} 10.0.1.15 demo demo"/>
+                    <PARAM NAME="cact_script_params_act" VALUE="ccri_post_cisco_voip_serialnumber.py {ip} 10.0.1.15 demo demo"/>
                     <SCHEDULE>
                         <START Class="Immediately"/>
                         <OCCURENCE onStart="true"/>
