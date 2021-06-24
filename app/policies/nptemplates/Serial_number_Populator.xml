@@ -86,7 +86,7 @@
                     </CONDITION>
                 </EXPRESSION>
                 <ACTION DISABLED="false" NAME="run_script">
-                    <PARAM NAME="script_howtorun_ac" VALUE="ccri_post_win_serialnumber.ps1 -ip {ip} -api 10.0.1.15 -username demo -password demo"/>
+                    <PARAM NAME="script_howtorun_ac" VALUE="ccri_post_win_serialnumber.ps1 -ip {ip} -api 10.0.1.15 -username demo -password demo -insecure"/>
                     <PARAM NAME="script_interactive" VALUE="false"/>
                     <PARAM NAME="define_time_to_run" VALUE="false"/>
                     <PARAM NAME="time_to_run" VALUE="1"/>
