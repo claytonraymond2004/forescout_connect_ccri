@@ -33,10 +33,23 @@ Write-Host $biosData["SerialNumber"]
 $physicalMedia = Get-WMIObject win32_physicalmedia
 $mediaSerials = @()
 foreach ($drive in $physicalMedia) {
-    $mediaSerials += @{Tag = $drive.Tag; serial_number = $drive.SerialNumber}
+    $mediaSerials += @{media_tag = $drive.Tag; serial_number = $drive.SerialNumber}
 }
 Write-Host $(ConvertTo-Json -Compress $mediaSerials)
 
+# Disable Certificate Validation in Powershell
+add-type @"
+    using System.Net;
+    using System.Security.Cryptography.X509Certificates;
+    public class TrustAllCertsPolicy : ICertificatePolicy {
+        public bool CheckValidationResult(
+            ServicePoint srvPoint, X509Certificate certificate,
+            WebRequest request, int certificateProblem) {
+            return true;
+        }
+    }
+"@
+[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
 
 # Get Connect Web API Token
 try {
@@ -46,15 +59,21 @@ try {
     $response = Invoke-RestMethod "https://$api/connect/v1/authentication/token" -Method 'POST' -Headers $headers -Body $body
 
     # POST to /hosts API To put data
-    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-    $headers.Add("Content-Type", "application/json")
-    $headers.Add("Authorization", "Bearer $($response.data.token)")
-    $headers.Add("Accept", "application/json")
-    $body = "{ `"ip`": `"$ip`", `"properties`":{ `"connect_ccri_serialnumber`":`"$($biosData["SerialNumber"])`", `"connect_ccri_diskserialnumbers`": $(ConvertTo-Json -Compress $mediaSerials) }}"
-    $response = Invoke-RestMethod "https://$api/connect/v1/hosts" -Method 'POST' -Headers $headers -Body $body
+    try {
+        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+        $headers.Add("Content-Type", "application/json")
+        $headers.Add("Authorization", "Bearer $($response.data.token)")
+        $headers.Add("Accept", "application/json")
+        $body = "{ `"ip`": `"$ip`", `"properties`":{ `"connect_ccri_serialnumber`":`"$($biosData["SerialNumber"])`", `"connect_ccri_mserialnumber`": $(ConvertTo-Json -Compress $mediaSerials) }}"
+        $response = Invoke-RestMethod "https://$api/connect/v1/hosts" -Method 'POST' -Headers $headers -Body $body
+    } catch {
+        # Error POSTing Data
+        Write-Error "Forescout Connect ccri App API POST Error"
+        Write-Error $_
+    }
 
 } catch {
     # Error authenticating
-    Write-Host "Forescout Connect API Auth error - StatusCode:" $_.Exception.Response.StatusCode.value__ 
-    Write-Host "Forescout Connect API Auth error - StatusDescription:" $_.Exception.Response.StatusDescription
+    Write-Error "Forescout Connect API Auth Error"
+    Write-Error $_
 }
