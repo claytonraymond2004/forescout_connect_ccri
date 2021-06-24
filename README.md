@@ -89,11 +89,12 @@ Please feel free to branch this repo and make a merge request to enhance this se
 #### Windows Serial Number sub-rule
 Edit the "Run Script on Windows" action and click the [...] button to upload the `ccri_post_win_serialnumber.ps1 ` file (in the `api_scripts/connect_ccri_serialnumber/Windows (Run on Windows Endpoints as Action` folder). In the "Command or Script" textbox you then need to reference this script and give it some parameters:
 
-`ccri_post_win_serialnumber.ps1 -ip {ip} -api <connect_web_api_server_ip> -username <app_username> -password <app_password>`
+`ccri_post_win_serialnumber.ps1 -ip {ip} -api <connect_web_api_server_ip> -username <app_username> -password <app_password> -insecure`
 
 Replace `<connect_web_api_server_ip>` with the IP address of the appliance running the connect API (probably your EM).
 Replace `<app_username>` with the Connect App username created when you imported the app (step 3 in the Setup section)
 Replace `<app_password>`  with the Connect App password created when you imported the app (step 3 in the Setup section)
+The `-insecure` switch is optional if you want to disable certificate validation on the script to the Forescout Web API (self signed Forescout certificate)
 Leave the `{ip}` argument alone -- this passes the IP address of the phone we want to resolve to the script.
 
 Example: `ccri_post_win_serialnumber.ps1 -ip {ip} -api 10.0.1.15 -username demo -password demo`
