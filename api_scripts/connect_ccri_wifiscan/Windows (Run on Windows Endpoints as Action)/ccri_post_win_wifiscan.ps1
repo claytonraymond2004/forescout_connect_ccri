@@ -1,5 +1,7 @@
-﻿$WiFi = (netsh wlan show network  mode=bssid |  Select-Object -Skip  3).Trim()  | Out-String
+﻿# Get Wifi networks from windows
+$WiFi = (netsh wlan show network  mode=bssid |  Select-Object -Skip  3).Trim()  | Out-String
 
+# Regex for parsing data -- lump all the BSSIDs in a property we'll expand out later
 $NetRegEx = @'
 (?smi)SSID \d+ : (?<SSID>[^\r\n]+)
 Network type\s+: (?<NetworkType>[^\r\n]+)
@@ -7,7 +9,7 @@ Authentication\s+: (?<Authentication>[^\r\n]+)
 Encryption\s+: (?<Encryption>[^\r\n]+)
 (?<BSSIDs>(.*))
 '@ 
-
+# Regex for parsing each BSSID under the network
 $BssidRegEx = @'
 \s+\d+\s+: (?<BSSID>[^\r\n]+)
 Signal\s+: (?<Signal>[^\%]+)[\%\r\n]
@@ -17,11 +19,12 @@ Basic rates \(Mbps\)\s+: (?<BasicRates>[^\r\n]+)
 Other rates \(Mbps\)\s+: (?<OtherRates>[^\r\n]+)
 '@
 
-$Networks = $WiFi -split  "\r\s+\n" 
-
+# hold all found networks/bssid
 $WiFiNetworks = @()
 
-$Networks | ForEach {
+# Iterate through each discovered network
+$WiFi -split  "\r\s+\n"  | ForEach {
+    # Extract out network info
     If ($_ -match $NetRegEx) {
         $network = [pscustomobject]@{
             ssid =  $Matches.SSID
@@ -35,7 +38,7 @@ $Networks | ForEach {
             basic_rates = ""
             other_rates = ""
         }
-
+        # Explode on each BSSID
         $Matches.BSSIDs -split "BSSID" | ForEach {
             If ($_ -match $BssidRegEx) {
                 $network.bssid = $Matches.BSSID
@@ -45,7 +48,7 @@ $Networks | ForEach {
                 $network.basic_rates = $Matches.BasicRates
                 $network.other_rates = $Matches.OtherRates
             }
-            $WiFiNetworks += $network
+            $WiFiNetworks += $network # Store full details of network/bssid
         }
     }
 }
