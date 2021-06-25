@@ -24,26 +24,26 @@ $WiFiNetworks = @()
 $Networks | ForEach {
     If ($_ -match $NetRegEx) {
         $network = [pscustomobject]@{
-            SSID =  $Matches.SSID
-            NetworkType = $Matches.NetworkType
-            AuthenticationType = $Matches.Authentication
-            Encryption = $Matches.Encryption
-            BSSID = ""
-            Signal = 0
-            RadioType = ""
-            Channel = ""
-            BasicRates = ""
-            OtherRates = ""
+            ssid =  $Matches.SSID
+            network_type = $Matches.NetworkType
+            auth_type = $Matches.Authentication
+            encryption = $Matches.Encryption
+            bssid = ""
+            signal = 0
+            radio_type = ""
+            channel = ""
+            basic_rates = ""
+            other_rates = ""
         }
 
         $Matches.BSSIDs -split "BSSID" | ForEach {
             If ($_ -match $BssidRegEx) {
-                $network.BSSID = $Matches.BSSID
-                $network.Signal = $Matches.Signal
-                $network.RadioType = $Matches.RadioType
-                $network.Channel = $Matches.Channel
-                $network.BasicRates = $Matches.BasicRates
-                $network.OtherRates = $Matches.OtherRates
+                $network.bssid = $Matches.BSSID
+                $network.signal = [int]$Matches.Signal
+                $network.radio_type = $Matches.RadioType
+                $network.channel = [int]$Matches.Channel
+                $network.basic_rates = $Matches.BasicRates
+                $network.other_rates = $Matches.OtherRates
             }
             $WiFiNetworks += $network
         }
