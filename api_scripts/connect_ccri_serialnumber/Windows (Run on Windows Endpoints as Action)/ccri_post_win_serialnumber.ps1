@@ -19,7 +19,6 @@
     
 .SWITCH inseucre
     Will ignore certificate validation to Forescout Web API
-
 #>
 Param(
     [string]$ip = $(throw "-ip is required."),
