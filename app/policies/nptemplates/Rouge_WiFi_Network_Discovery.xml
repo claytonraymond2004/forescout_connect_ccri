@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<RULES>
+    <RULE APP_VERSION="8.2.2.1-124" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="Find Wireless network names that are outside of allowed network names. Edit the &quot;Rouge WiFi Network Found&quot; rule with the names of your Corporate/Expected WiFi networks. &#10;&#10;You may want to exclude VPN users from this policy or otherwise narrow the scope to only those devices on the phyiscal campus where you expect your networks to be." ENABLED="true" ID="-4475481416743367704" NAME="Rouge WiFi Network Discovered" NOT_COND_UPDATE="true" UPGRADE_PERFORMED="true">
+        <GROUP_IN_FILTER/>
+        <INACTIVITY_TTL TTL="259200000" USE_DEFAULT="true"/>
+        <ADMISSION_RESOLVE_DELAY TTL="30000" USE_DEFAULT="true"/>
+        <MATCH_TIMING RATE="86400" SKIP_INACTIVE="true">
+            <ADMISSION ALL="true"/>
+        </MATCH_TIMING>
+        <EXPRESSION EXPR_TYPE="SIMPLE">
+            <!--Rule expression. Rule name is: Rouge WiFi Network Discovered-->
+            <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_wifiscan" LABEL="WiFi Scan" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
+                <FILTER COMP_FIELD_NAME="connect_ccri_wifiscan" FILTER_ID="-7913024870137185074">
+                    <SUB_FILTER CASE_SENSITIVE="false" HAS_VALUE="true" MEETS="true" SUB_FIELD_NAME="ssid" TYPE="any">
+                        <VALUE VALUE2="Any"/>
+                    </SUB_FILTER>
+                </FILTER>
+            </CONDITION>
+        </EXPRESSION>
+        <EXCEPTION NAME="ip" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="mac" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="nbthost" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="user" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="group" UNKNOWN_EVAL="UNMATCH"/>
+        <ORIGIN NAME="CUSTOM"/>
+        <UNMATCH_TIMING RATE="86400" SKIP_INACTIVE="true">
+            <ADMISSION ALL="true"/>
+        </UNMATCH_TIMING>
+        <SEGMENT ID="-3109178619152565739" NAME="In Scope">
+            <RANGE FROM="10.0.0.0" TO="10.255.255.255"/>
+            <RANGE FROM="192.168.2.0" TO="192.168.2.255"/>
+        </SEGMENT>
+        <RULE_CHAIN>
+            <INNER_RULE APP_VERSION="8.2.2.1-124" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="Networks found not in the &quot;WiFi Scan - SSID NOT: Matches Expression&quot; condition list will be found as Rouge networks. Use the pipe symbol ( | ) between network names in the Regular Expression as an &quot;OR&quot;.&#10;&#10;&quot;Corp|Corp Guest&quot; means the networks &quot;Corp&quot; OR &quot;Corp Guest&quot; are allowed, all others are Rouge." ID="-4950395392511633672" NAME="Rouge WiFi Network Found" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: Rouge WiFi Network Found-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_wifiscan" LABEL="WiFi Scan" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
+                        <FILTER COMP_FIELD_NAME="connect_ccri_wifiscan" FILTER_ID="-2375873024127228893">
+                            <SUB_FILTER CASE_SENSITIVE="false" HAS_VALUE="true" MEETS="false" SUB_FIELD_NAME="ssid" TYPE="regexp">
+                                <VALUE VALUE2="Corporate|Corporate Guest"/>
+                            </SUB_FILTER>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.2.2.1-124" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="-8933433968406249174" NAME="No Rouge WiFi Networks Found" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+            </INNER_RULE>
+        </RULE_CHAIN>
+        <REPORT_TABLES/>
+    </RULE>
+</RULES>
