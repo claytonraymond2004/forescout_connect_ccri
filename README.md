@@ -2,7 +2,7 @@
 
 This package is a collection of utilities, policy templates, and scripts to help with commonly requested items in the US DoD.
 
-## Capabilities
+# Capabilities
 
 - When ACAS/Tenable integration is configured/enabled/functioning, creates and maintains an attribute on Hosts for the number of CAT 1/2/3 vulnerabilities on the host.
   - Useful to make it easy to find hosts with a high number of CAT 1/2/3 vulnerabilities and block/quarantine them if they are over a threshold.
@@ -31,7 +31,7 @@ This package is a collection of utilities, policy templates, and scripts to help
   - Physical Location (GPS)
     - Windows devices via running Powershell script on manageable Windows Devices
 
-## Setup
+# Setup
 
 1) Go to Web API in Options and create a username/password for this App to use and make sure the API is allowed to be accessed from all Forescout appliance IP addresses
  - *This app uses the Forescout Web API to gather information about endpoints and process it to create other attributes on endpoints.*
@@ -59,7 +59,7 @@ This package is a collection of utilities, policy templates, and scripts to help
 
 7) Complete the app setup and Apply the Connect settings to start the app.
 
-## Policies
+# Policies
 
 Multiple policy templates are included in the "CCRI" Policy template tree to try and kick start the process to resolving the properties added by the app. These policy templates should be fairly self explanatory, just make sure they are scoped correctly and deal with any groups that may be inadvertently imported by deploying these policies.
 
@@ -78,6 +78,8 @@ Compliance Policies:
 - ACAS CAT 3 Count
 - Host Offline Length
 - Rouge WiFi Network Discovered
+
+## Populator Policies
 
 ### Serial Number Populator
 
@@ -128,25 +130,12 @@ This script is fairly basic and just grabs the `SerialNumber` attribute from the
 
 Please feel free to branch this repo and make a merge request to enhance this if there's something better.
 
+
 ### WiFi Networks (Scan) Populator
 
 Currently this policy only works on Windows devices and will enumerate the WiFi networks the devices has in range using netsh. It will explode out the BSSIDs of networks created and discover hidden networks and identify them by BSSID. The policy template attempts to narrow down the scope to only those devices that have a Network Adapter that has "Wireless", "WiFi", or "Wi-Fi" in the name.
 
-##### Policy Action details
 
-Edit the "Run Script on Windows" action and click the [...] button to upload the `ccri_post_win_wifiscan.ps1` file (in the `api_scripts/connect_ccri_wifiscan/Windows (Run on Windows Endpoints as Action` folder). In the "Command or Script" textbox you then need to reference this script and give it some parameters:
-
-`ccri_post_win_wifiscan.ps1 -ip {ip} -api <connect_web_api_server_ip> -username <app_username> -password <app_password> -insecure`
-
-Replace `<connect_web_api_server_ip>` with the IP address of the appliance running the connect API (probably your EM).
-Replace `<app_username>` with the Connect App username created when you imported the app (step 3 in the Setup section)
-Replace `<app_password>`  with the Connect App password created when you imported the app (step 3 in the Setup section)
-The `-insecure` switch is optional if you want to disable certificate validation on the script to the Forescout Web API (self signed Forescout certificate)
-Leave the `{ip}` argument alone -- this passes the IP address of the phone we want to resolve to the script.
-
-Example: `ccri_post_win_wifiscan.ps1 -ip {ip} -api 10.0.1.15 -username demo -password demo`
-
-It is also recommended to adjust the conditions on the sub-rule to make sure it matches to your manageable Windows endpoints with WiFi cards properly.
 
 ### Physical Location (GPS) Populator
 
@@ -169,6 +158,14 @@ Optionally you can set `AttemptDelay` and `MaxAttempts` parameters to adjust loc
 Example: `ccri_post_win_gps_coords.ps1 -ip {ip} -api 10.0.1.15 -username demo -password demo -AttemptDelay 1000 -MaxAttempts 30`
 
 It is also recommended to adjust the conditions on the sub-rule to make sure it matches to your manageable Windows endpoints with location services properly.
+
+## Compliance Policies
+
+### Rouge WiFi Network Discovered
+This policy uses the discoverd WiFi networks data to show devices that see a WiFi network that is outside a list of expected/allowed networks. Due the the datatype that the WiFi network list is inside Forescout, we use a Regular Express (RegEx) against the "WiFi Networks (Scan)" > Name" attribute that contains a list of all the allowable network names. Networks found not in the "WiFi Scan - SSID NOT: Matches Expression" condition list will be found as Rouge networks. Use the pipe symbol ( | ) between network names in the Regular Expression as an "OR".
+
+"Corp|Corp Guest" means the networks "Corp" OR "Corp Guest" are allowed, all others are Rouge.
+
 
 # Misc
 
