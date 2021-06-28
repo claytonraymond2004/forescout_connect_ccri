@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<RULES>
+    <RULE APP_VERSION="8.2.2.1-124" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="Device GPS location from system location services, POSTed in by CCRI Connect App API (Script). May be an estimate location and not 100% accurate." ENABLED="true" ID="-6003865678049022826" NAME="Physical Location (GPS) Populator" NOT_COND_UPDATE="true" UPGRADE_PERFORMED="true">
+        <GROUP_IN_FILTER>
+            <GROUP ID="8703036174630578027" NAME="P-Managed Windows Devices"/>
+        </GROUP_IN_FILTER>
+        <INACTIVITY_TTL TTL="259200000" USE_DEFAULT="true"/>
+        <ADMISSION_RESOLVE_DELAY TTL="300000" USE_DEFAULT="false"/>
+        <MATCH_TIMING RATE="86400" SKIP_INACTIVE="true">
+            <ADMISSION ALL="true"/>
+        </MATCH_TIMING>
+        <EXPRESSION EXPR_TYPE="AND">
+            <!--Rule expression. Rule name is: Physical Location (GPS) Populator-->
+            <EXPRESSION EXPR_TYPE="SIMPLE">
+                <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="online" LABEL="Host is online" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
+                    <FILTER FILTER_ID="-7075217908013882017" VALUE="true"/>
+                </CONDITION>
+            </EXPRESSION>
+            <EXPRESSION EXPR_TYPE="SIMPLE">
+                <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="registry_1.d9ba042f45756753fb0aacfa8cbfdc49" LABEL="Windows Registry Value Registry Value Path:HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\Value, When the specified registry value is no longer detected::no" LEFT_PARENTHESIS="0" LOGIC="AND" PLUGIN_NAME="HPS Inspection Engine" PLUGIN_UNIQUE_NAME="va" PLUGIN_VESRION="11.1.2" PLUGIN_VESRION_NUMBER="111020046" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                    <FIELD METANAME="registry_1" NAME="registry_1.d9ba042f45756753fb0aacfa8cbfdc49">
+                        <PARAM NAME="registry_key" TYPE="string" VALUE="HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\Value"/>
+                        <PARAM NAME="delete_irresolvable" TYPE="string" VALUE="no"/>
+                    </FIELD>
+                    <FILTER CASE_SENSITIVE="false" FILTER_ID="-7315090127485537187" TYPE="contains">
+                        <VALUE VALUE2="Allow"/>
+                    </FILTER>
+                </CONDITION>
+            </EXPRESSION>
+        </EXPRESSION>
+        <ACTION DISABLED="false" NAME="run_script">
+            <PARAM NAME="script_howtorun_ac" VALUE="ccri_post_win_gps_coords.ps1 -ip 10.1.40.130 -api 10.1.20.20 -username demo -password demo -insecure -AttemptDelay 1000 -MaxAttempts 30"/>
+            <PARAM NAME="script_interactive" VALUE="false"/>
+            <PARAM NAME="define_time_to_run" VALUE="false"/>
+            <PARAM NAME="time_to_run" VALUE="1"/>
+            <SCHEDULE>
+                <START Class="Immediately"/>
+                <OCCURENCE onStart="true"/>
+            </SCHEDULE>
+        </ACTION>
+        <EXCEPTION NAME="ip" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="mac" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="nbthost" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="user" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="group" UNKNOWN_EVAL="UNMATCH"/>
+        <ORIGIN NAME="CUSTOM"/>
+        <UNMATCH_TIMING RATE="86400" SKIP_INACTIVE="true">
+            <ADMISSION ALL="true"/>
+        </UNMATCH_TIMING>
+        <SEGMENT ID="-3109178619152565739" NAME="In Scope">
+            <RANGE FROM="10.0.0.0" TO="10.255.255.255"/>
+            <RANGE FROM="192.168.2.0" TO="192.168.2.255"/>
+        </SEGMENT>
+        <RULE_CHAIN/>
+        <REPORT_TABLES/>
+    </RULE>
+</RULES>
