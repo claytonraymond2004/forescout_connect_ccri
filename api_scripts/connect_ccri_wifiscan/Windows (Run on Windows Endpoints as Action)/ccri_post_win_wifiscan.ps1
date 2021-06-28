@@ -51,7 +51,7 @@ $WiFi = (netsh wlan show network  mode=bssid |  Select-Object -Skip  3).Trim()  
 
 # Regex for parsing data -- lump all the BSSIDs in a property we'll expand out later
 $NetRegEx = @'
-(?smi)SSID \d+ : (?<SSID>[^\r\n]+)
+(?smi)SSID \d+ :(?<SSID>[^\r\n]*)
 Network type\s+: (?<NetworkType>[^\r\n]+)
 Authentication\s+: (?<Authentication>[^\r\n]+)
 Encryption\s+: (?<Encryption>[^\r\n]+)
@@ -71,32 +71,40 @@ Other rates \(Mbps\)\s+: (?<OtherRates>[^\r\n]+)
 $WiFiNetworks = @()
 
 # Iterate through each discovered network
-$WiFi -split  "\r\s+\n"  | ForEach {
+$WiFi -split  "\r\s+\n" | ForEach {
     # Extract out network info
     If ($_ -match $NetRegEx) {
-        $network = [pscustomobject]@{
-            ssid =  $Matches.SSID
-            network_type = $Matches.NetworkType
-            auth_type = $Matches.Authentication
-            encryption = $Matches.Encryption
-            bssid = ""
-            signal = 0
-            radio_type = ""
-            channel = ""
-            basic_rates = ""
-            other_rates = ""
-        }
+        $netMatch = $Matches
         # Explode on each BSSID
-        $Matches.BSSIDs -split "BSSID" | ForEach {
+        $netMatch.BSSIDs.Trim() -split "BSSID" | ForEach {
+            $network = [pscustomobject]@{
+                ssid =  $netMatch.SSID.Trim()
+                network_type = $netMatch.NetworkType
+                auth_type = $netMatch.Authentication
+                encryption = $netMatch.Encryption
+                bssid = ""
+                signal = 0
+                radio_type = ""
+                channel = ""
+                basic_rates = ""
+                other_rates = ""
+            }
             If ($_ -match $BssidRegEx) {
+                # Set name of SSID if empty
+                if($network.ssid -eq "") {
+                    $network.ssid = "HIDDEN NETWORK: $($Matches.BSSID)"
+                }
                 $network.bssid = $Matches.BSSID
                 $network.signal = [int]$Matches.Signal
                 $network.radio_type = $Matches.RadioType
                 $network.channel = [int]$Matches.Channel
                 $network.basic_rates = $Matches.BasicRates
                 $network.other_rates = $Matches.OtherRates
+
+                # Store full details of network/bssid
+                $WiFiNetworks += $network
             }
-            $WiFiNetworks += $network # Store full details of network/bssid
+            
         }
     }
 }
