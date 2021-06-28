@@ -104,7 +104,6 @@ $WiFi -split  "\r\s+\n" | ForEach {
                 # Store full details of network/bssid
                 $WiFiNetworks += $network
             }
-            
         }
     }
 }
