@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <RULES>
-    <RULE APP_VERSION="8.2.2.1-124" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="Runs script on compatible endpoints to scan for nearby WiFi networks and POSTs to Connect app." ENABLED="true" ID="9114612047412618530" NAME="WiFi Network (Scan) Populator" NOT_COND_UPDATE="true" UPGRADE_PERFORMED="true">
-        <GROUP_IN_FILTER>
-            <GROUP ID="8703036174630578027" NAME="P-Managed Windows Devices"/>
-        </GROUP_IN_FILTER>
+    <RULE APP_VERSION="8.2.2.1-124" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ENABLED="true" ID="6375131572777311702" NAME="WiFi Network (Scan) Populator" NOT_COND_UPDATE="true" UPGRADE_PERFORMED="true">
+        <GROUP_IN_FILTER/>
         <INACTIVITY_TTL TTL="259200000" USE_DEFAULT="true"/>
         <ADMISSION_RESOLVE_DELAY TTL="300000" USE_DEFAULT="false"/>
         <MATCH_TIMING RATE="86400" SKIP_INACTIVE="true">
@@ -14,6 +12,13 @@
             <EXPRESSION EXPR_TYPE="SIMPLE">
                 <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="online" LABEL="Host is online" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
                     <FILTER FILTER_ID="-7075217908013882017" VALUE="true"/>
+                </CONDITION>
+            </EXPRESSION>
+            <EXPRESSION EXPR_TYPE="SIMPLE">
+                <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="in-group" LABEL="Member of Group" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
+                    <FILTER FILTER_ID="5871478547927646938">
+                        <GROUP ID="8703036174630578027" NAME="P-Managed Windows Devices"/>
+                    </FILTER>
                 </CONDITION>
             </EXPRESSION>
             <EXPRESSION EXPR_TYPE="PARENTHESIS">
