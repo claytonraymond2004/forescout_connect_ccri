@@ -17,6 +17,13 @@
                 </CONDITION>
             </EXPRESSION>
             <EXPRESSION EXPR_TYPE="SIMPLE">
+                <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="in-group" LABEL="Member of Group" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
+                    <FILTER FILTER_ID="5871478547927646938">
+                        <GROUP ID="8703036174630578027" NAME="P-Managed Windows Devices"/>
+                    </FILTER>
+                </CONDITION>
+            </EXPRESSION>
+            <EXPRESSION EXPR_TYPE="SIMPLE">
                 <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="registry_1.d9ba042f45756753fb0aacfa8cbfdc49" LABEL="Windows Registry Value Registry Value Path:HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\Value, When the specified registry value is no longer detected::no" LEFT_PARENTHESIS="0" LOGIC="AND" PLUGIN_NAME="HPS Inspection Engine" PLUGIN_UNIQUE_NAME="va" PLUGIN_VESRION="11.1.2" PLUGIN_VESRION_NUMBER="111020046" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
                     <FIELD METANAME="registry_1" NAME="registry_1.d9ba042f45756753fb0aacfa8cbfdc49">
                         <PARAM NAME="registry_key" TYPE="string" VALUE="HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location\Value"/>
