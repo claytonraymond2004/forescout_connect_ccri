@@ -105,7 +105,6 @@ try {
         $headers.Add("Authorization", "Bearer $($response.data.token)")
         $headers.Add("Accept", "application/json")
         $body = "{ `"ip`": `"$ip`", `"properties`":{ `"connect_ccri_gpscoords`": $(ConvertTo-Json -Compress $Location) }}"
-        Write-Host $body
         $response = Invoke-RestMethod "https://$api/connect/v1/hosts" -Method 'POST' -Headers $headers -Body $body
     } catch {
         # Error POSTing Data
