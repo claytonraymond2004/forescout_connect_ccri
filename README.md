@@ -159,10 +159,46 @@ Example: `ccri_post_win_gps_coords.ps1 -ip {ip} -api 10.0.1.15 -username demo -p
 
 It is also recommended to adjust the conditions on the sub-rule to make sure it matches to your manageable Windows endpoints with location services properly.
 
+### P12/PFX Search Populator
+
+Currently this policy only works on Windows devices and uses Windows Search service to find .p12 and .pfx files on the device. An optional parameter (`-fallback`) allows the script to fallback to a recursive file-system level search using the Powershell `Get-ChildItem` cmdlet. This method may be more comprehensive than the Windows Search Index, however it comes at an expesnive disk and time utilization penalty and would probably be noticable by users. Use this sparingly.
+
+The policy has 2 sub-rules, "Search using Windows Search" which checks if the Windows Search service is running before executing the script. "Search using Fallback Search (Slow)" is conditional on the Search Service not running and adds the `-fallback` parameter to the script. Note however that in some cases you may want to add the `-fallback` parameter to the "Search using Windows Search" rule in the event the Windows Search service throws an exception for some reason and you want it to fallback to the slow method.
+
+##### Policy Action details
+
+Edit the "Run Script on Windows" action and click the [...] button to upload the `ccri_post_win_gps_coords.ps1` file (in the `api_scripts/connect_ccri_certsearch/Windows (Run on Windows Endpoints as Action` folder). In the "Command or Script" textbox you then need to reference this script and give it some parameters:
+
+`connect_ccri_certsearch.ps1 -ip {ip} -api <connect_web_api_server_ip> -username <app_username> -password <app_password> -insecure`
+
+Replace `<connect_web_api_server_ip>` with the IP address of the appliance running the connect API (probably your EM).
+Replace `<app_username>` with the Connect App username created when you imported the app (step 3 in the Setup section)
+Replace `<app_password>`  with the Connect App password created when you imported the app (step 3 in the Setup section)
+The `-insecure` switch is optional if you want to disable certificate validation on the script to the Forescout Web API (self signed Forescout certificate)
+Leave the `{ip}` argument alone -- this passes the IP address of the phone we want to resolve to the script.
+
+Optionally you can set `-fallback` switch to allow fallback to the `Get-ChildItem` recursive search.
+
+Example: `connect_ccri_certsearch.ps1 -ip {ip} -api 10.0.1.15 -username demo -password demo -fallback`
+
+It is also recommended to adjust the conditions on the sub-rule to make sure it matches to your manageable Windows endpoints properly.
+
 ## Compliance Policies
 
 ### Rouge WiFi Network Discovered
-This policy uses the discoverd WiFi networks data to show devices that see a WiFi network that is outside a list of expected/allowed networks. Due the the datatype that the WiFi network list is inside Forescout, we use a Regular Express (RegEx) against the "WiFi Networks (Scan)" > Name" attribute that contains a list of all the allowable network names. Networks found not in the "WiFi Scan - SSID NOT: Matches Expression" condition list will be found as Rouge networks. Use the pipe symbol ( | ) between network names in the Regular Expression as an "OR".
+This policy uses the discoverd WiFi networks data to show devices that see a WiFi network that is outside a list of expected/allowed networks. Due the the datatype that the WiFi network list is inside Forescout, we use a Regular Expression (RegEx) against the "WiFi Networks (Scan)" > Name" attribute that contains a list of all the allowable network names. Networks found not in the "WiFi Scan - SSID NOT: Matches Expression" condition list will be found as Rouge networks. Use the pipe symbol ( | ) between network names in the Regular Expression as an "OR".
+
+"Corp|Corp Guest" means the networks "Corp" OR "Corp Guest" are allowed, all others are Rouge.
+
+### P12/PFX Certificate Compliance
+This policy uses the 'P12/PFX Certificates' data to show devices that have a PFX/P12 Certificate that is outside a list of expected/allowed certificates. Due the the datatype that the Certificate list is inside Forescout, we use a Regular Expression (RegEx) against the "P12/PFX Certificates" attribute that contains a list of all the allowable certificate filepaths. Certificates found not in the "ALL PFX/P12 Certificates - Matches Expression" condition list will be found as disallowed certificates. Use the pipe symbol ( | ) between Certificate paths in the Regular Expression as an "OR". Escape folder delimeters with an extra `\` (`\\`). Escape dots with a `\` (`\.`). Generally, it would be recommended to generate wildcard based paths using `.*`.
+
+Examples:
+
+- All files, no matter where they are, that END in "allowed.pfx": `.*allowed\.pfx`
+- All files, no matter where they are, called "allowed.pfx": `.*\\allowed\.pfx`
+- Specific filepath "C:\Program Files\Test\test.p12": `C:\\Program Files\\Test\\test\.p12`
+- All files, no matter where they are, called either "allowed.pfx" or "allowed.p12": `.*\\allowed\.pfx|.*\\allowed\.p12`
 
 "Corp|Corp Guest" means the networks "Corp" OR "Corp Guest" are allowed, all others are Rouge.
 
