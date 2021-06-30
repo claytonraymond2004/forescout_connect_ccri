@@ -179,7 +179,7 @@ The policy has 2 sub-rules, "Search using Windows Search" which checks if the Wi
 
 Currently this policy only works on Windows devices and uses ip-api.com on endpoints to get their External IP address and GeoIP information.
 
-Note: By default we use the insecure, rate limited, free tier of ip-api.com that is not allowed for commerical use. To remove the rate limiting and enable secure communications to get GeoIP information, sign up for an ip-api account and modify scripts accordingly to use the API key and https.
+Note: By default we use the insecure, rate limited, free tier of ip-api.com that is not allowed for commerical use. To remove the rate limiting and enable secure communications to get GeoIP information, sign up for an [ip-api](https://members.ip-api.com/) account and modify scripts accordingly to use the API key and https.
 
 
 ##### Policy Action details
