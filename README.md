@@ -165,11 +165,18 @@ Currently this policy only works on Windows devices and uses Windows Search serv
 
 The policy has 2 sub-rules, "Search using Windows Search" which checks if the Windows Search service is running before executing the script. "Search using Fallback Search (Slow)" is conditional on the Search Service not running and adds the `-fallback` parameter to the script. Note however that in some cases you may want to add the `-fallback` parameter to the "Search using Windows Search" rule in the event the Windows Search service throws an exception for some reason and you want it to fallback to the slow method.
 
+### GeoIP Populator
+
+Currently this policy only works on Windows devices and uses ip-api.com on endpoints to get their External IP address and GeoIP information.
+
+Note: By default we use the insecure, rate limited, free tier of ip-api.com that is not allowed for commerical use. To remove the rate limiting and enable secure communications to get GeoIP information, sign up for an ip-api account and modify scripts accordingly to use the API key and https.
+
+
 ##### Policy Action details
 
-Edit the "Run Script on Windows" action and click the [...] button to upload the `ccri_post_win_gps_coords.ps1` file (in the `api_scripts/connect_ccri_certsearch/Windows (Run on Windows Endpoints as Action` folder). In the "Command or Script" textbox you then need to reference this script and give it some parameters:
+Edit the "Run Script on Windows" action and click the [...] button to upload the `ccri_post_win_gps_coords.ps1` file (in the `api_scripts/connect_ccri_geoip/Windows (Run on Windows Endpoints as Action` folder). In the "Command or Script" textbox you then need to reference this script and give it some parameters:
 
-`connect_ccri_certsearch.ps1 -ip {ip} -api <connect_web_api_server_ip> -username <app_username> -password <app_password> -insecure`
+`connect_ccri_geoip.ps1 -ip {ip} -api <connect_web_api_server_ip> -username <app_username> -password <app_password> -insecure`
 
 Replace `<connect_web_api_server_ip>` with the IP address of the appliance running the connect API (probably your EM).
 Replace `<app_username>` with the Connect App username created when you imported the app (step 3 in the Setup section)
@@ -177,9 +184,7 @@ Replace `<app_password>`  with the Connect App password created when you importe
 The `-insecure` switch is optional if you want to disable certificate validation on the script to the Forescout Web API (self signed Forescout certificate)
 Leave the `{ip}` argument alone -- this passes the IP address of the phone we want to resolve to the script.
 
-Optionally you can set `-fallback` switch to allow fallback to the `Get-ChildItem` recursive search.
-
-Example: `connect_ccri_certsearch.ps1 -ip {ip} -api 10.0.1.15 -username demo -password demo -fallback`
+Example: `connect_ccri_geoip.ps1 -ip {ip} -api 10.0.1.15 -username demo -password demo`
 
 It is also recommended to adjust the conditions on the sub-rule to make sure it matches to your manageable Windows endpoints properly.
 
@@ -201,6 +206,11 @@ Examples:
 - All files, no matter where they are, called either "allowed.pfx" or "allowed.p12": `.*\\allowed\.pfx|.*\\allowed\.p12`
 
 "Corp|Corp Guest" means the networks "Corp" OR "Corp Guest" are allowed, all others are Rouge.
+
+### GeoIP Location Compliance
+This policy uses the GeoIP property to show devices that arenlt compliant with an expected GeoIP location. In this case it has simple logic to simply show devices that have an external IP address that is in the US as complaint, otherwise they are non-compliant. Adjust this logic to fit your network / segments / etc.
+
+The idea behind this policy is to identify devices which may be using a VPN to avoid network restrictions or devices being used outside the expected areas (ie laptops being used in China/Russia).
 
 
 # Misc

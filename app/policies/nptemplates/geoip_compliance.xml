@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <RULES>
-    <RULE APP_VERSION="8.2.2.1-124" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ENABLED="true" ID="5007164467831138946" NAME="GeoIP Location Compliance" NOT_COND_UPDATE="true" UPGRADE_PERFORMED="true">
+    <RULE APP_VERSION="8.2.2.1-124" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ENABLED="true" ID="5007164467831138946" META_TYPE="COMPLY" NAME="GeoIP Location Compliance" NOT_COND_UPDATE="true" UPGRADE_PERFORMED="true">
         <GROUP_IN_FILTER/>
         <INACTIVITY_TTL TTL="0" USE_DEFAULT="true"/>
         <ADMISSION_RESOLVE_DELAY TTL="0" USE_DEFAULT="true"/>
@@ -25,6 +25,7 @@
                 <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
                     <ADMISSION ALL="true"/>
                 </MATCH_TIMING>
+                <META_TYPE STATE="COMPLY"/>
                 <EXPRESSION EXPR_TYPE="SIMPLE">
                     <!--Rule expression. Rule name is: GeoIP Location Complaint-->
                     <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_geoip" LABEL="GeoIP" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
@@ -43,6 +44,7 @@
                 <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
                     <ADMISSION ALL="true"/>
                 </MATCH_TIMING>
+                <META_TYPE STATE="NOT_COMPLY"/>
                 <EXPRESSION EXPR_TYPE="SIMPLE">
                     <!--Rule expression. Rule name is: GeoIP Location Non-Compliant-->
                     <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_geoip" LABEL="GeoIP" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
@@ -58,6 +60,7 @@
                 <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
                     <ADMISSION ALL="true"/>
                 </MATCH_TIMING>
+                <META_TYPE STATE="NOT_MANAGEABLE"/>
                 <EXPRESSION EXPR_TYPE="SIMPLE">
                     <!--Rule expression. Rule name is: GeoIP Location Lookup Failure-->
                     <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_geoip" LABEL="GeoIP" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
@@ -73,6 +76,7 @@
                 <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
                     <ADMISSION ALL="true"/>
                 </MATCH_TIMING>
+                <META_TYPE STATE="NOT_MANAGEABLE"/>
             </INNER_RULE>
         </RULE_CHAIN>
         <REPORT_TABLES/>
