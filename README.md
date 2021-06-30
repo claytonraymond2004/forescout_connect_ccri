@@ -76,6 +76,8 @@ Populator Policies:
 - Serial Number Populator
 - WiFi Networks (Scan) Populator
 - Physical Location (GPS) Populator
+- PFX/P12 Populator
+- GeoIP Populator
 
 Compliance Policies:
 
@@ -84,6 +86,8 @@ Compliance Policies:
 - ACAS CAT 3 Count
 - Host Offline Length
 - Rouge WiFi Network Discovered
+- PFX/P12 Certificate Compliance
+- GeoIP Compliance
 
 ## Populator Policies
 
