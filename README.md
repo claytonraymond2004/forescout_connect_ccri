@@ -21,6 +21,8 @@ This package is a collection of utilities, policy templates, and scripts to help
     - Physical Media Serial Numbers
     - WiFi Networks (Scan)
     - Physical Location (GPS)
+    - PFX/P12 Certificates
+    - GeoIP
 
 - Scripts & templates to populate/use the properties created above:
   - Device Serial Number & Physical Media Serial Numbers
@@ -29,6 +31,10 @@ This package is a collection of utilities, policy templates, and scripts to help
   - WiFi Networks (Scan)
     - Windows devices via running Powershell script on manageable Windows Devices
   - Physical Location (GPS)
+    - Windows devices via running Powershell script on manageable Windows Devices
+  - PFX/P12 Certificates
+    - Windows devices via running Powershell script on manageable Windows Devices
+  - GeoIP
     - Windows devices via running Powershell script on manageable Windows Devices
 
 # Setup
