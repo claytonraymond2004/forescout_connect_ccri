@@ -20,7 +20,7 @@ try:
     phone_web_obj.close()
 
     # Search for serial number in HTML
-    serial_number = re.search("Serial Number.+?(?=<B>)<B>([^\<]+)", phone_web_content)
+    serial_number = re.search("(?i)(Serial Number).+?(?=<B>)<B>([^\<]+)", phone_web_content)
     if serial_number:
         # Found serial number
         print serial_number.group(1)
