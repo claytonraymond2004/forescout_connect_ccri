@@ -11,9 +11,15 @@ This package is a collection of utilities, policy templates, and scripts to help
     - ACAS CAT 2 Count
     - ACAS CAT 3 Count
 
-- Creates and maintains a timestamp property on hosts for the last time the device was seen online. Useful to create policies to find computers that have been offline for a period of time.
+- Creates and maintains a timestamp property on hosts for certain properties and makes them available as conditions -- normally these timestamp values are only available in the Web API.
   - Properties added:
     - 'Online' Last Reported Timestamp
+      - The last time the device's `online` property was reported/set (set to online or offline). Useful to create policies to find computers that have been offline for a period of time.
+
+- Creates and maintains "transformation" properties, that is to say some properties that take existing properties and transform them in some way to be used in other policies later.
+  - Properties added:
+    - DNS Name to NetBIOS name
+      - Takes DNS based hostname and transforms to NetBIOS style name by removing domain info (ex: test.contoso.com -> test)
   
 - Creates properties which are updatable via the Connect API
   - Properties added:
