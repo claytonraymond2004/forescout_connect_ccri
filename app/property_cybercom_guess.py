@@ -4,9 +4,7 @@ response = {
 }
 
 # Get parameters
-groups = params["in-group"] # device groups; only provided if triggered off group change and calculaing guessed category
-guess = params["connect_ccri_disa_reporting_cybercom_cat_guess"] # Guessed category; provided if guessed or overriden category sets/changes
-override = params["connect_ccri_disa_reporting_cybercom_cat_override"] # Overridden category; provided if guessed or overriden category sets/changes
+groups = params.get("in-group") # device groups; only provided if triggered off group change and calculaing guessed category
 
 # Device category groups; for performing guess
 mobile = ["P-Mobile", "P-Mobile Devices Manual Discover", "P-Mobile Devices Manual Discover", "C2C-Step1-Manual-Mobile Device", "C2C-Step1-Discovery-Mobile"]
@@ -15,17 +13,11 @@ workstations = ["P-Windows", "P-Linux/Unix", "P-macOS", "P-Windows Manual Discov
 cps = ["P-OT Devices","P-OT Devices Manual Discover","C2C-Step1-CPS/CS","C2C-Step1-Manual-CPS/CS Device"]
 iot = ["P-IoT", "P-IoT Devices Manual Discover", "C2C-Step1-IOT", "C2C-Step1-Manual-IOT Device"]
 
-# If groups were provided, we're resolving the guess value
-if groups:
-    logging.debug(groups)
-    # response["properties"]["connect_ccri_disa_reporting_cybercom_cat_guess"] = cybercom
+#Resolving the guess value
+logging.debug(groups)
+guess = None
 
-# otherwise we're resolving the final value
-else :
-    if override :
-        response["properties"]["connect_ccri_disa_reporting_cybercom_cat_final"] = override
-    elif guess:
-        response["properties"]["connect_ccri_disa_reporting_cybercom_cat_final"] = guess
+response["properties"]["connect_ccri_disa_reporting_cybercom_cat_guess"] = guess
 
 response["succeeded"] = True
 ## DONE
