@@ -60,6 +60,8 @@ try:
             
             if guess:
                 response["properties"]["connect_ccri_disa_reporting_cybercom_cat_guess"] = guess
+            else:
+                response["error"] = "Failed to guess USCYBERCOM Device Category"
 
         else:
             logging.error("No Group data for host found! (in-group is not found in Forescout Web API)")
