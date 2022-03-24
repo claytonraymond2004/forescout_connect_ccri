@@ -17,14 +17,15 @@ forescout_jwt_token = params["connect_authorization_token"]
 
 # Device category groups; for performing guess
 mobile = ["P-Mobile", "P-Mobile Devices Manual Discover", "P-Mobile Devices Manual Discover", "C2C-Step1-Manual-Mobile Device", "C2C-Step1-Discovery-Mobile"]
-user_support = ["P-Printers", "P-VoIP Devices", "P-Printers Manual Discover", "P-VoIP Manual Discover", "C2C-Step1-Manual-VOIP Device", "C2C-Step1-Manual-Printer Device", "C2C-Step1-Manual-VoIP Devices", "C2C-Step1-Manual-Discovery-Printers"]
+network_support = ["P-Printers", "P-VoIP Devices", "P-Printers Manual Discover", "P-VoIP Manual Discover", "C2C-Step1-Manual-VOIP Device", "C2C-Step1-Manual-Printer Device", "C2C-Step1-Manual-VoIP Devices", "C2C-Step1-Manual-Discovery-Printers"]
 workstations = ["P-Windows", "P-Linux/Unix", "P-macOS", "P-Windows Manual Discover", "P-Linux/Unix Manual Discover", "P-macOS Manual Discover", "C2C-Step1-Manual-MacOS Device", "C2C-Step1-Manual-Unix Device", "C2C-Step1-Manual-Windows Device", "C2C-Step1-Manual-CounterACT", "C2C-Step1-Manual-OOB", "C2C-Step1-Manual-MacOS", "C2C-Step1-Manual-Linux/Unix", "C2C-Step1-Manual-Windows"]
-cps = ["P-OT Devices","P-OT Devices Manual Discover","C2C-Step1-CPS/CS","C2C-Step1-Manual-CPS/CS Device"]
+infrastructure = ["P-Network Devices", "P-Network Devices Manual Discover", "C2C-Step1-Manual-Network Device", "C2C-Step1-Discovery-Storage", "C2C-Step1-Discovery-Network Devices"]
+cps_cs = ["P-OT Devices","P-OT Devices Manual Discover","C2C-Step1-CPS/CS","C2C-Step1-Manual-CPS/CS Device"]
 iot = ["P-IoT", "P-IoT Devices Manual Discover", "C2C-Step1-IOT", "C2C-Step1-Manual-IOT Device"]
 
 # Create request to get host data from Forescout
 forescout_headers = {"Authorization": forescout_jwt_token}
-forescout_request = urllib.request.Request(forescout_url + "/api/hosts/ip/" + host_ip + "/?fields=online", headers=forescout_headers)
+forescout_request = urllib.request.Request(forescout_url + "/api/hosts/ip/" + host_ip + "/?fields=in-group", headers=forescout_headers)
 
 logging.debug("Preparing to get host information for host: {}".format(host_ip))
 
@@ -39,9 +40,23 @@ try:
         groups_web = host_data.get('host', {}).get('fields', {}).get('in-group', None)
 
         if groups_web:
-            logging.debug(groups_web)
-            #Resolving the guess value
-            guess = None
+            guess = None;
+            # Parse list of group objects to just list of group.value (a string)
+            groups_web_vals = [ val['value'] for val in groups_web ]
+
+            # Check if 
+            if any(item in groups_web_vals for item in mobile):
+                guess = "mobile"
+            elif any(item in groups_web_vals for item in network_support):
+                guess = "network_support"
+            elif any(item in groups_web_vals for item in workstations):
+                guess = "workstations"
+            elif any(item in groups_web_vals for item in infrastructure):
+                guess = "infrastructure"
+            elif any(item in groups_web_vals for item in cps_cs):
+                guess = "cps_cs"
+            elif any(item in groups_web_vals for item in iot):
+                guess = "iot"
             
             if guess:
                 response["properties"]["connect_ccri_disa_reporting_cybercom_cat_guess"] = guess
