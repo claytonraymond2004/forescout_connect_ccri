@@ -52,6 +52,10 @@ This package is a collection of utilities, policy templates, and scripts to help
   - GeoIP
     - Windows devices via running Powershell script on manageable Windows Devices
 
+- Actions:
+  - Classify > Set USCYBERCOM Device Category
+    - Allows you to set the "USCYBERCOM Device Category (Override)" property on a device
+
 # Setup
 
 1) Go to Web API in Options and create a username/password for this App to use and make sure the API is allowed to be accessed from all Forescout appliance IP addresses
