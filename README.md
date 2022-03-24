@@ -25,10 +25,10 @@ This package is a collection of utilities, policy templates, and scripts to help
   - Properties added:
     - USCYBERCOM Device Category (Override)
       - Override field to manually (via action) set the USCYBERCOM Category of this device.
-    - USCYBERCOM Device Category (Guess)
+    - USCYBERCOM Device Category (Suggested)
       - Uses a script to try to guess the CYBERCOM category of the device and set it
     - USCYBERCOM Device Category (Final)
-      - Uses a script to set the "final" value of the USCYBERCOM device. If Override value is present, uses this value; otherwise uses the Guess value.
+      - Uses a script to set the "final" value of the USCYBERCOM device. If Override value is present, uses this value; otherwise uses the Suggested value.
   
 - Creates properties which are updatable via the Connect API
   - Properties added:
