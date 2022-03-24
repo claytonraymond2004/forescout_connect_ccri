@@ -20,6 +20,15 @@ This package is a collection of utilities, policy templates, and scripts to help
   - Properties added:
     - DNS Name to NetBIOS name
       - Takes DNS based hostname and transforms to NetBIOS style name by removing domain info (ex: test.contoso.com -> test)
+
+- Creates and helps maintain properties useful for the DISA C2C reporting requirements
+  - Properties added:
+    - USCYBERCOM Device Category (Override)
+      - Override field to manually (via action) set the USCYBERCOM Category of this device.
+    - USCYBERCOM Device Category (Guess)
+      - Uses a script to try to guess the CYBERCOM category of the device and set it
+    - USCYBERCOM Device Category (Final)
+      - Uses a script to set the "final" value of the USCYBERCOM device. If Override value is present, uses this value; otherwise uses the Guess value.
   
 - Creates properties which are updatable via the Connect API
   - Properties added:
