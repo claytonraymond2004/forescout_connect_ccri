@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<RULES>
+    <RULE APP_VERSION="8.3.0.1-84" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ENABLED="true" ID="-1894661788221060229" NAME="[Connect CCRI] Suggested USCYBERCOM Device Category" NOT_COND_UPDATE="true" UPGRADE_PERFORMED="true">
+        <GROUP_IN_FILTER/>
+        <INACTIVITY_TTL TTL="259200000" USE_DEFAULT="true"/>
+        <ADMISSION_RESOLVE_DELAY TTL="1800000" USE_DEFAULT="false"/>
+        <MATCH_TIMING RATE="604800" SKIP_INACTIVE="true">
+            <ADMISSION ALL="true"/>
+        </MATCH_TIMING>
+        <EXCEPTION NAME="ip" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="mac" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="nbthost" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="user" UNKNOWN_EVAL="UNMATCH"/>
+        <EXCEPTION NAME="group" UNKNOWN_EVAL="UNMATCH"/>
+        <ORIGIN NAME="CUSTOM"/>
+        <UNMATCH_TIMING RATE="604800" SKIP_INACTIVE="true">
+            <ADMISSION ALL="true"/>
+        </UNMATCH_TIMING>
+        <SEGMENT ID="-3109178619152565739" NAME="PS_Template_Scope">
+            <RANGE FROM="10.0.0.1" TO="10.255.255.255"/>
+            <RANGE FROM="74.209.0.0" TO="74.209.255.255"/>
+            <RANGE FROM="137.48.0.0" TO="137.48.255.255"/>
+            <RANGE FROM="172.16.0.0" TO="172.16.99.255"/>
+            <RANGE FROM="172.16.100.1" TO="172.16.100.254"/>
+            <RANGE FROM="172.16.101.1" TO="172.16.101.254"/>
+            <RANGE FROM="172.16.102.0" TO="172.17.255.255"/>
+            <RANGE FROM="172.19.1.1" TO="172.26.11.255"/>
+            <RANGE FROM="172.27.12.0" TO="172.27.17.255"/>
+            <RANGE FROM="172.27.20.0" TO="172.27.23.255"/>
+            <RANGE FROM="172.30.0.0" TO="172.31.255.255"/>
+            <RANGE FROM="192.168.0.0" TO="192.168.255.255"/>
+        </SEGMENT>
+        <RULE_CHAIN>
+            <INNER_RULE APP_VERSION="8.3.0.1-84" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="5714858343410280883" NAME="Overridden" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: Overridden-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_disa_reporting_cybercom_cat_override" LABEL="USCYBERCOM Device Category (Override)" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="IRRESOLVED" RIGHT_PARENTHESIS="0">
+                        <FILTER AUTO_UPDATE="false" FILTER_ID="3366695701510293211" OPTIONS_DIGEST="ea82a91a123ee07a5141ae4aa8d0d854">
+                            <OPT VALUE="mobile"/>
+                            <OPT VALUE="network_support"/>
+                            <OPT VALUE="workstations"/>
+                            <OPT VALUE="infrastructure"/>
+                            <OPT VALUE="cps_cs"/>
+                            <OPT VALUE="iot"/>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.3.0.1-84" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="-5858778380899426441" NAME="Mobile Devices" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: Mobile Devices-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_disa_reporting_cybercom_cat_guess" LABEL="USCYBERCOM Device Category (Suggested)" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                        <FILTER AUTO_UPDATE="false" FILTER_ID="-7467196698599900016" OPTIONS_DIGEST="ea82a91a123ee07a5141ae4aa8d0d854">
+                            <OPT VALUE="mobile"/>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.3.0.1-84" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="7291319752431750166" NAME="Networked User Support Devices" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: Networked User Support Devices-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_disa_reporting_cybercom_cat_guess" LABEL="USCYBERCOM Device Category (Suggested)" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                        <FILTER AUTO_UPDATE="false" FILTER_ID="4339938591155209236" OPTIONS_DIGEST="ea82a91a123ee07a5141ae4aa8d0d854">
+                            <OPT VALUE="network_support"/>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.3.0.1-84" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="-240341042704894724" NAME="Workstations and Servers" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: Workstations and Servers-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_disa_reporting_cybercom_cat_guess" LABEL="USCYBERCOM Device Category (Suggested)" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                        <FILTER AUTO_UPDATE="false" FILTER_ID="7367147131769093389" OPTIONS_DIGEST="ea82a91a123ee07a5141ae4aa8d0d854">
+                            <OPT VALUE="workstations"/>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.3.0.1-84" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="2865495885974204708" NAME="Network Infrastructure" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: Network Infrastructure-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_disa_reporting_cybercom_cat_guess" LABEL="USCYBERCOM Device Category (Suggested)" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                        <FILTER AUTO_UPDATE="false" FILTER_ID="4288749341547190561" OPTIONS_DIGEST="ea82a91a123ee07a5141ae4aa8d0d854">
+                            <OPT VALUE="infrastructure"/>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.3.0.1-84" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="-1433590075820829822" NAME="Cyber Physical Systems/Control Systems (CPS/CS)" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: Cyber Physical Systems/Control Systems (CPS/CS)-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_disa_reporting_cybercom_cat_guess" LABEL="USCYBERCOM Device Category (Suggested)" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                        <FILTER AUTO_UPDATE="false" FILTER_ID="4646640428215896489" OPTIONS_DIGEST="ea82a91a123ee07a5141ae4aa8d0d854">
+                            <OPT VALUE="cps_cs"/>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.3.0.1-84" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="3196061219635796304" NAME="Internet of Things" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+                <EXPRESSION EXPR_TYPE="SIMPLE">
+                    <!--Rule expression. Rule name is: Internet of Things-->
+                    <CONDITION EMPTY_LIST_VALUE="false" FIELD_NAME="connect_ccri_disa_reporting_cybercom_cat_guess" LABEL="USCYBERCOM Device Category (Suggested)" LEFT_PARENTHESIS="0" LOGIC="AND" RET_VALUE_ON_UKNOWN="UNMATCH" RIGHT_PARENTHESIS="0">
+                        <FILTER AUTO_UPDATE="false" FILTER_ID="7718509478930778511" OPTIONS_DIGEST="ea82a91a123ee07a5141ae4aa8d0d854">
+                            <OPT VALUE="iot"/>
+                        </FILTER>
+                    </CONDITION>
+                </EXPRESSION>
+            </INNER_RULE>
+            <INNER_RULE APP_VERSION="8.3.0.1-84" CACHE_TTL="259200" CACHE_TTL_SYNCED="true" CLASSIFICATION="REG_STATUS" DESCRIPTION="" ID="-7574308921309213615" NAME="Unknown (Reports as IoT)" NOT_COND_UPDATE="true" RECHECK_MAIN_RULE_DEF="true">
+                <MATCH_TIMING RATE="28800" SKIP_INACTIVE="true">
+                    <ADMISSION ALL="true"/>
+                </MATCH_TIMING>
+            </INNER_RULE>
+        </RULE_CHAIN>
+        <REPORT_TABLES/>
+    </RULE>
+</RULES>
